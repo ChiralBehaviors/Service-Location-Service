@@ -11,4 +11,4 @@ To build this project, you will need Java 1.7 (although the binaries are targete
 
     mvn clean install
 
-Note that you still need implmentations of this API ;)  This projec only provides the API and framework, not the underlying implementation.
+Note that you still need implmentations of this API ;)  This project only provides the API and framework, not the underlying implementation.
