@@ -31,19 +31,19 @@ import java.util.Map;
 public class ServiceReference implements Serializable {
     private static final long     serialVersionUID = 1L;
     protected ServiceURL          url;
-    protected Map<String, Object> properties;
+    protected Map<String, String> properties;
 
     /**
      * @param url
      * @param properties
      */
-    public ServiceReference(ServiceURL url, Map<String, Object> properties) {
+    public ServiceReference(ServiceURL url, Map<String, String> properties) {
         super();
         this.url = url;
         this.properties = properties;
     }
 
-    public Map<String, Object> getProperties() {
+    public Map<String, String> getProperties() {
         return Collections.unmodifiableMap(properties);
     }
 

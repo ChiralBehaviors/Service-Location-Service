@@ -290,7 +290,7 @@ public interface ServiceScope {
      *            - the map of properties
      * @return the UUID representing the service registration.
      */
-    UUID register(ServiceURL url, Map<String, Object> properties);
+    UUID register(ServiceURL url, Map<String, String> properties);
 
     /**
      * Remove a listener from the scope.
@@ -308,7 +308,7 @@ public interface ServiceScope {
      * @param properties
      *            - the map of properties for the service
      */
-    void setProperties(UUID serviceRegistration, Map<String, Object> properties);
+    void setProperties(UUID serviceRegistration, Map<String, String> properties);
 
     /**
      * Unregister the service from the scope.

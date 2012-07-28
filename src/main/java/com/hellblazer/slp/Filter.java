@@ -33,12 +33,12 @@ public interface Filter {
      * @return <code>true</code> if the Map's keys match this filter;
      *         <code>false</code> otherwise.
      */
-    boolean match(Map<String, Object> properties);
+    boolean match(Map<String, String> properties);
 
     boolean match(ServiceReference reference);
 
     /**
-     * Filter with case sensitivity using a <tt>Map<String, Object></tt> object.
+     * Filter with case sensitivity using a <tt>Map<String, String></tt> object.
      * The FilterImpl is executed using the <tt>Map</tt> object's keys and
      * values. The keys are case sensitivley matched with the filter.
      * 
@@ -48,6 +48,6 @@ public interface Filter {
      * @return <tt>true</tt> if the <tt>Map</tt> object's keys and values match
      *         this filter; <tt>false</tt> otherwise.
      */
-    boolean matchCase(Map<String, Object> properties);
+    boolean matchCase(Map<String, String> properties);
 
 }

@@ -149,7 +149,7 @@ import org.slf4j.LoggerFactory;
  * those values. For example,
  * 
  * <pre>
- * Dictionary d = new Hashtable();
+ * Map d = new Hashtable();
  * d.put(&quot;cn&quot;, new String[] { &quot;a&quot;, &quot;b&quot;, &quot;c&quot; });
  * </pre>
  * 
@@ -663,7 +663,7 @@ public class FilterImpl implements Filter {
 
     /**
      * Constructs a {@link FilterImpl} object. This filter object may be used to
-     * match a Dictionary.
+     * match a Map.
      * 
      * <p>
      * If the filter cannot be parsed, an {@link InvalidSyntaxException} will be
@@ -729,16 +729,16 @@ public class FilterImpl implements Filter {
     }
 
     /**
-     * FilterImpl using a Dictionary. The FilterImpl is executed using the
-     * Dictionary's keys.
+     * FilterImpl using a Map. The FilterImpl is executed using the
+     * Map's keys.
      * 
      * @param properties
-     *            the dictionary whose keys are used in the match.
-     * @return <code>true</code> if the Dictionary's keys match this filter;
+     *            the map whose keys are used in the match.
+     * @return <code>true</code> if the Map keys match this filter;
      *         <code>false</code> otherwise.
      */
     @Override
-    public boolean match(Map<String, Object> properties) {
+    public boolean match(Map<String, String> properties) {
         if (properties != null) {
             properties = new HeaderMap(properties);
         }
@@ -752,21 +752,21 @@ public class FilterImpl implements Filter {
     }
 
     /**
-     * FilterImpl with case sensitivity using a <tt>Dictionary</tt> object. The
-     * FilterImpl is executed using the <tt>Dictionary</tt> object's keys and
+     * FilterImpl with case sensitivity using a <tt>Map</tt> object. The
+     * FilterImpl is executed using the <tt>Map</tt> object's keys and
      * values. The keys are case sensitivley matched with the filter.
      * 
      * @param properties
-     *            The <tt>Dictionary</tt> object whose keys are used in the
+     *            The <tt>Map</tt> object whose keys are used in the
      *            match.
      * 
-     * @return <tt>true</tt> if the <tt>Dictionary</tt> object's keys and values
+     * @return <tt>true</tt> if the <tt>Map</tt> object's keys and values
      *         match this filter; <tt>false</tt> otherwise.
      * 
      * @since 1.3
      */
     @Override
-    public boolean matchCase(Map<String, Object> properties) {
+    public boolean matchCase(Map<String, String> properties) {
         return match0(properties);
     }
 
@@ -1649,15 +1649,15 @@ public class FilterImpl implements Filter {
     }
 
     /**
-     * Internal match routine. Dictionary parameter must support
+     * Internal match routine. Map parameter must support
      * case-insensitive get.
      * 
      * @param properties
-     *            A dictionary whose keys are used in the match.
-     * @return If the Dictionary's keys match the filter, return
+     *            A Map whose keys are used in the match.
+     * @return If the Map's keys match the filter, return
      *         <code>true</code>. Otherwise, return <code>false</code>.
      */
-    protected boolean match0(Map<String, Object> properties) {
+    protected boolean match0(Map<String, String> properties) {
         switch (operation) {
             case AND: {
                 FilterImpl[] filters = (FilterImpl[]) value;

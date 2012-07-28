@@ -22,15 +22,15 @@ import java.util.Map;
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  * 
  */
-public class HeaderMap extends HashMap<String, Object> {
+public class HeaderMap extends HashMap<String, String> {
     private static final long serialVersionUID = 1L;
 
     /**
      * @param m
      */
-    public HeaderMap(Map<String, Object> m) {
+    public HeaderMap(Map<String, String> m) {
         super();
-        for (Map.Entry<String, Object> entry : m.entrySet()) {
+        for (Map.Entry<String, String> entry : m.entrySet()) {
             super.put(entry.getKey().toLowerCase(), entry.getValue());
         }
     }
@@ -41,12 +41,12 @@ public class HeaderMap extends HashMap<String, Object> {
     }
 
     @Override
-    public Object get(Object key) {
+    public String get(Object key) {
         return super.get(((String) key).toLowerCase());
     }
 
     @Override
-    public Object put(String key, Object value) {
+    public String put(String key, String value) {
         throw new UnsupportedOperationException();
     }
 
