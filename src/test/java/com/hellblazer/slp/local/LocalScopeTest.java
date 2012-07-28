@@ -43,7 +43,7 @@ import com.hellblazer.slp.ServiceURL;
 public class LocalScopeTest {
 
     @Test
-    public void testRegistration() throws Exception {
+    public void testServiceListener() throws Exception {
         ServiceListener serviceListener = mock(ServiceListener.class);
         Executor executor = new Executor() {
             @Override
