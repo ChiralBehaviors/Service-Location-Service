@@ -59,6 +59,10 @@ abstract public class ServiceReference implements Serializable {
         return Collections.unmodifiableMap(properties);
     }
 
+    public UUID getRegistration() {
+        return registration;
+    }
+
     public ServiceURL getUrl() {
         return url;
     }
@@ -72,9 +76,5 @@ abstract public class ServiceReference implements Serializable {
     public String toString() {
         return "ServiceReference [url=" + url + ", properties=" + properties
                + ", registration=" + registration + "]";
-    }
-
-    protected UUID getRegistration() {
-        return registration;
     }
 }
