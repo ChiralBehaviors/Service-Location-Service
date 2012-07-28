@@ -17,6 +17,7 @@ package com.hellblazer.slp;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * The ServiceReference represents a registered service within a
@@ -28,19 +29,30 @@ import java.util.Map;
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  * 
  */
-public class ServiceReference implements Serializable {
+abstract public class ServiceReference implements Serializable {
     private static final long     serialVersionUID = 1L;
-    protected ServiceURL          url;
+
     protected Map<String, String> properties;
+    protected final UUID          registration;
+    protected ServiceURL          url;
 
     /**
      * @param url
      * @param properties
      */
-    public ServiceReference(ServiceURL url, Map<String, String> properties) {
-        super();
+    public ServiceReference(ServiceURL url, Map<String, String> properties,
+                            UUID registration) {
         this.url = url;
         this.properties = properties;
+        this.registration = registration;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && obj instanceof ServiceReference) {
+            return registration.equals(((ServiceReference) obj).registration);
+        }
+        return false;
     }
 
     public Map<String, String> getProperties() {
@@ -52,8 +64,17 @@ public class ServiceReference implements Serializable {
     }
 
     @Override
+    public int hashCode() {
+        return registration.hashCode();
+    }
+
+    @Override
     public String toString() {
         return "ServiceReference [url=" + url + ", properties=" + properties
-               + "]";
+               + ", registration=" + registration + "]";
+    }
+
+    protected UUID getRegistration() {
+        return registration;
     }
 }
