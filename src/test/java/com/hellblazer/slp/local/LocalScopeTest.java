@@ -16,12 +16,15 @@ package com.hellblazer.slp.local;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 
@@ -33,6 +36,7 @@ import com.fasterxml.uuid.Generators;
 import com.hellblazer.slp.ServiceEvent;
 import com.hellblazer.slp.ServiceEvent.EventType;
 import com.hellblazer.slp.ServiceListener;
+import com.hellblazer.slp.ServiceReference;
 import com.hellblazer.slp.ServiceScope;
 import com.hellblazer.slp.ServiceURL;
 
@@ -41,6 +45,42 @@ import com.hellblazer.slp.ServiceURL;
  * 
  */
 public class LocalScopeTest {
+
+    @Test
+    public void testServiceLookup() throws Exception {
+        Executor executor = new Executor() {
+            @Override
+            public void execute(Runnable command) {
+                command.run();
+            }
+        };
+
+        ServiceScope localScope = new LocalScope(
+                                                 executor,
+                                                 Generators.randomBasedGenerator());
+        ServiceURL url1 = new ServiceURL("service:http://foo.bar/one");
+        ServiceURL url2 = new ServiceURL("service:http://foo.bar/two");
+
+        UUID reference1 = localScope.register(url1,
+                                              new HashMap<String, String>());
+        String serviceType = "service:http";
+        assertEquals(url1, localScope.getServiceReference(serviceType).getUrl());
+
+        localScope.register(url2, new HashMap<String, String>());
+        List<ServiceReference> references = localScope.getServiceReferences(serviceType,
+                                                                            "");
+        assertNotNull(references);
+        assertEquals(2, references.size());
+        Set<ServiceURL> urls = new HashSet<ServiceURL>();
+        urls.add(references.get(0).getUrl());
+        urls.add(references.get(1).getUrl());
+        assertTrue(urls.contains(url1));
+        assertTrue(urls.contains(url2));
+        localScope.unregister(reference1);
+        references = localScope.getServiceReferences(serviceType, "");
+        assertEquals(1, references.size());
+        assertEquals(url2, references.get(0).getUrl());
+    }
 
     @Test
     public void testServiceListener() throws Exception {
