@@ -301,27 +301,22 @@ public interface ServiceScope {
     void removeServiceListener(ServiceListener listener);
 
     /**
-     * Update the service properties for an existing service. Distributed
-     * property update is not permitted.
+     * Update the service properties for an existing service. If this scope is
+     * not responsible for this service registration, no effect will occur.
      * 
      * @param serviceRegistration
      *            - the UUID identifying the service instance
      * @param properties
      *            - the map of properties for the service
-     * @throws NotLocalScopeException
-     *             if the service registration does not belong to this scope
      */
-    void setProperties(UUID serviceRegistration, Map<String, String> properties)
-                                                                                throws NotLocalScopeException;
+    void setProperties(UUID serviceRegistration, Map<String, String> properties);
 
     /**
-     * Unregister the service from the scope. Distributed service deregistration
-     * is not permitted.
+     * Unregister the service from the scope. If this scope is not responsible
+     * for this service registration, no effect will occur.
      * 
      * @param serviceRegistration
      *            - the UUID service registration that identifies the service
-     * @throws NotLocalScopeException
-     *             if the service registration does not belong to this scope
      */
-    void unregister(UUID serviceRegistration) throws NotLocalScopeException;
+    void unregister(UUID serviceRegistration);
 }

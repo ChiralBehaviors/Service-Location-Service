@@ -29,7 +29,6 @@ import com.fasterxml.uuid.NoArgGenerator;
 import com.hellblazer.slp.Filter;
 import com.hellblazer.slp.FilterImpl;
 import com.hellblazer.slp.InvalidSyntaxException;
-import com.hellblazer.slp.NotLocalScopeException;
 import com.hellblazer.slp.ServiceEvent;
 import com.hellblazer.slp.ServiceEvent.EventType;
 import com.hellblazer.slp.ServiceListener;
@@ -177,17 +176,14 @@ public class LocalScope implements ServiceScope {
      */
     @Override
     public void setProperties(UUID serviceRegistration,
-                              Map<String, String> properties)
-                                                             throws NotLocalScopeException {
+                              Map<String, String> properties) {
         ServiceReferenceImpl ref = services.get(serviceRegistration);
         if (ref == null) {
             if (log.isTraceEnabled()) {
                 log.trace(String.format("No service registered for %s",
                                         serviceRegistration));
             }
-            throw new NotLocalScopeException(
-                                             String.format("No service registered for %s",
-                                                           serviceRegistration));
+            return;
         }
         properties = new HashMap<String, String>(properties);
         properties.put(SERVICE_TYPE, ref.currentProperties().get(SERVICE_TYPE));
@@ -199,8 +195,7 @@ public class LocalScope implements ServiceScope {
      * @see com.hellblazer.slp.ServiceScope#unregister(java.util.UUID)
      */
     @Override
-    public void unregister(UUID serviceRegistration)
-                                                    throws NotLocalScopeException {
+    public void unregister(UUID serviceRegistration) {
         ServiceReference ref = services.remove(serviceRegistration);
         if (ref != null) {
             serviceChanged(ref, EventType.UNREGISTERED);
@@ -209,9 +204,6 @@ public class LocalScope implements ServiceScope {
                 log.trace(String.format("No service registered for %s",
                                         serviceRegistration));
             }
-            throw new NotLocalScopeException(
-                                             String.format("No service registered for %s",
-                                                           serviceRegistration));
         }
     }
 
