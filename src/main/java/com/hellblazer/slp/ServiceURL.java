@@ -122,10 +122,26 @@ public class ServiceURL implements Serializable {
         this(url, ttl, DEFAULT_TRANSPORT);
     }
 
+    public ServiceURL(String url, int ttl, int priority, String instanceName,
+                      int weight, String zone) throws MalformedURLException {
+        this(url, ttl, DEFAULT_TRANSPORT, priority, instanceName, weight, zone);
+    }
+
     public ServiceURL(String url, int ttl, Protocol transport)
                                                               throws MalformedURLException {
-        this(parseServiceType(url), parseUrl(url), ttl, transport, 0, null, 0,
-             null);
+        this(url, ttl, transport, 0, null, 0, null);
+    }
+
+    public ServiceURL(String url, int ttl, Protocol transport, int priority,
+                      String instanceName, int weight, String zone)
+                                                                   throws MalformedURLException {
+        this(parseServiceType(url), parseUrl(url), ttl, transport, priority,
+             instanceName, weight, zone);
+    }
+
+    public ServiceURL(String url, int ttl, String instanceName, String zone)
+                                                                            throws MalformedURLException {
+        this(url, ttl, 0, instanceName, 0, zone);
     }
 
     public ServiceURL(String abstractServiceType, URL url, int ttl) {
@@ -162,6 +178,10 @@ public class ServiceURL implements Serializable {
         return url.getHost();
     }
 
+    public String getInstanceName() {
+        return instanceName;
+    }
+
     public int getPort() {
         return url.getPort();
     }
@@ -173,12 +193,32 @@ public class ServiceURL implements Serializable {
         return sb.toString();
     }
 
+    public int getPriority() {
+        return priority;
+    }
+
     public String getServiceType() {
         return serviceType;
     }
 
     public Protocol getTransport() {
         return transport;
+    }
+
+    public int getTtl() {
+        return ttl;
+    }
+
+    public URL getUrl() {
+        return url;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public String getZone() {
+        return zone;
     }
 
     @Override
@@ -191,29 +231,5 @@ public class ServiceURL implements Serializable {
         }
         sb.append(url.toExternalForm());
         return sb.toString();
-    }
-
-    public int getTtl() {
-        return ttl;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public int getWeight() {
-        return weight;
-    }
-
-    public String getZone() {
-        return zone;
-    }
-
-    public String getInstanceName() {
-        return instanceName;
-    }
-
-    public URL getUrl() {
-        return url;
     }
 }
