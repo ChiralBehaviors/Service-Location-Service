@@ -30,7 +30,7 @@ import com.hellblazer.slp.ServiceURL;
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  * 
  */
-public class ServiceReferenceImpl extends ServiceReference  {
+class ServiceReferenceImpl extends ServiceReference {
     private static final long serialVersionUID = 1L;
 
     public ServiceReferenceImpl(ServiceURL url, Map<String, String> properties,
