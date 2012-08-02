@@ -55,6 +55,6 @@ public class ServiceURLTest {
         ServiceURL url = new ServiceURL(
                                         "service:myService:jar:http://foo.com/my.jar!/");
         assertEquals("myService", url.getServiceType());
-        assertEquals(new URL("jar:http://foo.com/my.jar!/"), url.getURL());
+        assertEquals(new URL("jar:http://foo.com/my.jar!/"), url.getUrl());
     }
 }
