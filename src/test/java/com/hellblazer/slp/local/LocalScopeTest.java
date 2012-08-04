@@ -14,6 +14,7 @@
  */
 package com.hellblazer.slp.local;
 
+import static com.hellblazer.slp.ServiceScope.SERVICE_TYPE;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
@@ -62,8 +63,8 @@ public class LocalScopeTest {
         ServiceURL url1 = new ServiceURL("service:http://foo.bar/two");
         ServiceURL url2 = new ServiceURL("service:http://foo.bar/one");
 
-        localScope.addServiceListener(serviceListener,
-                                      "(serviceType=service:http)");
+        localScope.addServiceListener(serviceListener, "(" + SERVICE_TYPE
+                                                       + "=service:http)");
 
         UUID reference1 = localScope.register(url1,
                                               new HashMap<String, String>());
