@@ -729,8 +729,7 @@ public class FilterImpl implements Filter {
     }
 
     /**
-     * FilterImpl using a Map. The FilterImpl is executed using the
-     * Map's keys.
+     * FilterImpl using a Map. The FilterImpl is executed using the Map's keys.
      * 
      * @param properties
      *            the map whose keys are used in the match.
@@ -753,15 +752,14 @@ public class FilterImpl implements Filter {
 
     /**
      * FilterImpl with case sensitivity using a <tt>Map</tt> object. The
-     * FilterImpl is executed using the <tt>Map</tt> object's keys and
-     * values. The keys are case sensitivley matched with the filter.
+     * FilterImpl is executed using the <tt>Map</tt> object's keys and values.
+     * The keys are case sensitivley matched with the filter.
      * 
      * @param properties
-     *            The <tt>Map</tt> object whose keys are used in the
-     *            match.
+     *            The <tt>Map</tt> object whose keys are used in the match.
      * 
-     * @return <tt>true</tt> if the <tt>Map</tt> object's keys and values
-     *         match this filter; <tt>false</tt> otherwise.
+     * @return <tt>true</tt> if the <tt>Map</tt> object's keys and values match
+     *         this filter; <tt>false</tt> otherwise.
      * 
      * @since 1.3
      */
@@ -1649,13 +1647,12 @@ public class FilterImpl implements Filter {
     }
 
     /**
-     * Internal match routine. Map parameter must support
-     * case-insensitive get.
+     * Internal match routine. Map parameter must support case-insensitive get.
      * 
      * @param properties
      *            A Map whose keys are used in the match.
-     * @return If the Map's keys match the filter, return
-     *         <code>true</code>. Otherwise, return <code>false</code>.
+     * @return If the Map's keys match the filter, return <code>true</code>.
+     *         Otherwise, return <code>false</code>.
      */
     protected boolean match0(Map<String, String> properties) {
         switch (operation) {

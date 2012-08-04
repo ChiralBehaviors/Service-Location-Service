@@ -23,6 +23,13 @@ package com.hellblazer.slp;
 public enum Protocol {
     TCP("_tcp"), UDP("_udp");
 
+    /**
+     * Answer true if the name component represents a protocol
+     */
+    public static boolean isProtocol(String component) {
+        return TCP.type.equals(component) || UDP.type.equals(component);
+    }
+
     private final String type;
 
     private Protocol(String protocolType) {
