@@ -167,8 +167,8 @@ public class FilterImpl implements Filter {
      * parent.
      */
     static class Parser {
-        protected String filterstring;
         protected char[] filter;
+        protected String filterstring;
         protected int    pos;
 
         protected Parser(String filterstring) {
@@ -562,33 +562,23 @@ public class FilterImpl implements Filter {
 
     private final static Logger       log             = LoggerFactory.getLogger(FilterImpl.class);
 
-    /** filter operation */
-    protected int                     operation;
-
-    protected static final int        EQUAL           = 1;
+    protected static final int        AND             = 7;
 
     protected static final int        APPROX          = 2;
 
-    protected static final int        GREATER         = 3;
+    protected static final Class<?>[] constructorType = new Class<?>[] { String.class };
 
-    protected static final int        LESS            = 4;
+    protected static final int        EQUAL           = 1;
+
+    protected static final int        GREATER         = 3;
 
     /* Protected fields and methods for the FilterImpl implementation */
 
+    protected static final int        LESS            = 4;
+    protected static final int        NOT             = 9;
+    protected static final int        OR              = 8;
     protected static final int        PRESENT         = 5;
     protected static final int        SUBSTRING       = 6;
-    protected static final int        AND             = 7;
-    protected static final int        OR              = 8;
-    protected static final int        NOT             = 9;
-    /** filter attribute or null if operation AND, OR or NOT */
-    protected String                  attr;
-    /** filter operands */
-    protected Object                  value;
-    /* normalized filter string for topLevel FilterImpl object */
-    protected String                  filter;
-    /* true if root FilterImpl object */
-    protected boolean                 topLevel;
-    protected static final Class<?>[] constructorType = new Class<?>[] { String.class };
 
     /**
      * Map a string for an APPROX (~=) comparison.
@@ -660,6 +650,19 @@ public class FilterImpl implements Filter {
 
         return encoded ? new String(output, 0, cursor) : value;
     }
+
+    /** filter attribute or null if operation AND, OR or NOT */
+    protected String  attr;
+    /* normalized filter string for topLevel FilterImpl object */
+    protected String  filter;
+    /** filter operation */
+    protected int     operation;
+
+    /* true if root FilterImpl object */
+    protected boolean topLevel;
+
+    /** filter operands */
+    protected Object  value;
 
     /**
      * Constructs a {@link FilterImpl} object. This filter object may be used to

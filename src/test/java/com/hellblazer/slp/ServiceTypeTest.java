@@ -16,23 +16,30 @@ package com.hellblazer.slp;
 
 import static junit.framework.Assert.assertEquals;
 
-import java.net.URI;
-
 import org.junit.Test;
 
 /**
  * @author hhildebrand
  * 
  */
-public class ServiceURLTest {
+public class ServiceTypeTest {
 
     @Test
-    public void testServiceUrlParsing() throws Exception {
-        ServiceURL url = new ServiceURL(
-                                        "service:myService:jar:http://foo.com/my.jar!/");
-        assertEquals("service:myService:jar:http",
-                     url.getServiceType().toString());
-        assertEquals(new URI("srv://foo.com"), url.getUri());
-        assertEquals("/my.jar!/", url.getUrlPath());
+    public void testDnsServiceType() throws Exception {
+        String url = "service:myService:http";
+        ServiceType type = new ServiceType(url);
+        assertEquals("myService._http", type.getDnsServiceType());
+    }
+
+    @Test
+    public void testParseServiceType() throws Exception {
+        String url = "service:http";
+        ServiceType type = new ServiceType(url);
+        assertEquals("", type.getAbstractTypeName());
+
+        url = "service:myService:jar:http";
+        type = new ServiceType(url);
+        assertEquals("myService", type.getAbstractTypeName());
+        assertEquals("jar:http", type.getConcreteTypeName());
     }
 }

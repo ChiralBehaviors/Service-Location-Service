@@ -24,6 +24,20 @@ public enum Protocol {
     TCP("_tcp"), UDP("_udp");
 
     /**
+     * @param label
+     * @return
+     */
+    public static Protocol from(String label) {
+        if (TCP.getType().equals(label)) {
+            return TCP;
+        } else if (UDP.getType().equals(label)) {
+            return UDP;
+        }
+        throw new IllegalArgumentException(
+                                           String.format("%s is not a valid protocol label"));
+    }
+
+    /**
      * Answer true if the name component represents a protocol
      */
     public static boolean isProtocol(String component) {

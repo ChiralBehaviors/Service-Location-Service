@@ -154,7 +154,7 @@ public class LocalScope implements ServiceScope {
             properties = new HashMap<String, String>();
         }
         properties = new HashMap<String, String>(properties);
-        properties.put(SERVICE_TYPE, url.getPrefixedServiceType());
+        properties.put(SERVICE_TYPE, url.getServiceType().toString());
         properties.put(SERVICE_REGISTRAION, registration.toString());
         ServiceReferenceImpl ref = new ServiceReferenceImpl(url, properties,
                                                             registration);
