@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.uuid.NoArgGenerator;
 import com.hellblazer.slp.Filter;
-import com.hellblazer.slp.FilterImpl;
 import com.hellblazer.slp.InvalidSyntaxException;
 import com.hellblazer.slp.ServiceEvent;
 import com.hellblazer.slp.ServiceEvent.EventType;
@@ -72,7 +71,7 @@ public class LocalScope implements ServiceScope {
             log.trace("adding listener: " + listener + " on query: " + query);
         }
         List<ServiceReference> references;
-        listeners.put(listener, new FilterImpl(query));
+        listeners.put(listener, new Filter(query));
         references = getServiceReferences(null, query);
         for (ServiceReference reference : references) {
             final ServiceReference ref = reference;
@@ -94,14 +93,6 @@ public class LocalScope implements ServiceScope {
     }
 
     /* (non-Javadoc)
-     * @see com.hellblazer.slp.ServiceScope#createFilter(java.lang.String)
-     */
-    @Override
-    public Filter createFilter(String query) throws InvalidSyntaxException {
-        return new FilterImpl(query);
-    }
-
-    /* (non-Javadoc)
      * @see com.hellblazer.slp.ServiceScope#getServiceReference(java.lang.String)
      */
     @Override
@@ -110,8 +101,7 @@ public class LocalScope implements ServiceScope {
         if (serviceType == null) {
             serviceType = "*";
         }
-        Filter filter = createFilter("(" + SERVICE_TYPE + "=" + serviceType
-                                     + ")");
+        Filter filter = new Filter("(" + SERVICE_TYPE + "=" + serviceType + ")");
         for (ServiceReference ref : services.values()) {
             if (filter.match(ref)) {
                 return ref;
@@ -130,8 +120,8 @@ public class LocalScope implements ServiceScope {
         if (serviceType == null) {
             serviceType = "*";
         }
-        Filter filter = createFilter("(&(" + SERVICE_TYPE + "=" + serviceType
-                                     + ") " + query + ")");
+        Filter filter = new Filter("(&(" + SERVICE_TYPE + "=" + serviceType
+                                   + ") " + query + ")");
         ArrayList<ServiceReference> references = new ArrayList<ServiceReference>();
         for (Map.Entry<UUID, ServiceReferenceImpl> entry : services.entrySet()) {
             if (filter.match(entry.getValue())) {

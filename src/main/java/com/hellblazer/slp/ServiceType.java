@@ -33,6 +33,7 @@ import java.util.StringTokenizer;
  */
 public class ServiceType implements Serializable {
     public static final String IANA             = "";
+    public static final String SERVICE          = "service";
     public static final String SERVICE_PREFIX   = "service:";
     private static final long  serialVersionUID = 1L;
 
