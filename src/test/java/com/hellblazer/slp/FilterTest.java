@@ -33,19 +33,19 @@ public class FilterTest {
     @Test
     public void testFindAssertions() throws Exception {
         Filter filter = new Filter("(x=y)");
-        List<String> assertions = new ArrayList<>(filter.findAssertions("x"));
+        List<String> assertions = new ArrayList<String>(filter.findAssertions("x"));
         assertNotNull(assertions);
         assertEquals(1, assertions.size());
         assertEquals("y", assertions.get(0));
 
         filter = new Filter("(&(x=y) (z=y))");
-        assertions = new ArrayList<>(filter.findAssertions("x"));
+        assertions = new ArrayList<String>(filter.findAssertions("x"));
         assertNotNull(assertions);
         assertEquals(1, assertions.size());
         assertEquals("y", assertions.get(0));
 
         filter = new Filter("(&(x=y) (z=a))");
-        assertions = new ArrayList<>(filter.findAssertions("x"));
+        assertions = new ArrayList<String>(filter.findAssertions("x"));
         assertNotNull(assertions);
         assertEquals(1, assertions.size());
         assertEquals("y", assertions.get(0));
