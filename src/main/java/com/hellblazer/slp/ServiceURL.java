@@ -19,8 +19,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * A class representing a service url. It contains the service type, service
@@ -243,6 +245,11 @@ public class ServiceURL implements Serializable {
 
     public URI getUri() {
         return uri;
+    }
+
+    public URL getUrl() throws MalformedURLException {
+        return new URL(serviceType.getConcreteTypeName(), getHost(), getPort(),
+                       getUrlPath());
     }
 
     public String getUrlPath() {
