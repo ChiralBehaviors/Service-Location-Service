@@ -80,8 +80,8 @@ public class ServiceURL implements Serializable {
     private int               weight   = DEFAULT_WEIGHT;
     private String            zone;
 
-    public ServiceURL(Object obj, String type) {
-        this(obj, type, LIFETIME_DEFAULT, DEFAULT_TRANSPORT);
+    public ServiceURL(ServiceType type, URL url) throws URISyntaxException {
+        this(type, url, DEFAULT_TRANSPORT);
     }
 
     public ServiceURL(Object obj, String type, long ttl, Protocol transport) {
@@ -96,10 +96,32 @@ public class ServiceURL implements Serializable {
         this(url, ttl, DEFAULT_TRANSPORT);
     }
 
+    public ServiceURL(ServiceType type, URL url, Protocol transport)
+                                                                    throws URISyntaxException {
+        serviceType = type;
+        this.transport = transport;
+        uri = url.toURI();
+        urlPath = url.getPath();
+        StringBuilder builder = new StringBuilder();
+        builder.append(serviceType.toString());
+        if (uri.getHost() != null) {
+            builder.append("://");
+            builder.append(uri.getHost());
+            builder.append(':');
+            builder.append(uri.getPort());
+        } else {
+            builder.append(':');
+        }
+        builder.append(uri.getPath());
+        serviceURL = builder.toString();
+    }
+
     public ServiceURL(String url, long ttl, Protocol transport) {
-        int index = url.indexOf("://");
+        int index = url.indexOf(":/");
         if (index == -1) {
-            throw new IllegalArgumentException("No valid URL given");
+            throw new IllegalArgumentException(
+                                               String.format("No valid URL given %s",
+                                                             url));
         }
 
         // create servicetype
@@ -124,7 +146,8 @@ public class ServiceURL implements Serializable {
             try {
                 uri = new URI("srv" + host);
             } catch (URISyntaxException ex) {
-                throw new IllegalArgumentException("Illegal URL");
+                throw new IllegalArgumentException(String.format("Illegal URL",
+                                                                 url), ex);
             }
         } else {
             uri = null;
@@ -248,7 +271,7 @@ public class ServiceURL implements Serializable {
     }
 
     public URL getUrl() throws MalformedURLException {
-        return new URL(serviceType.getConcreteTypeName(), getHost(), getPort(),
+        return new URL(serviceType.getProtocol(), getHost(), getPort(),
                        getUrlPath());
     }
 

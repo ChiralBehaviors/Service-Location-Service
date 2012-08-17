@@ -182,6 +182,13 @@ public class ServiceType implements Serializable {
         return simpleType;
     }
 
+    /**
+     * @return
+     */
+    public String getProtocol() {
+        return isServiceType ? getPrincipleTypeName() : typeName;
+    }
+
     /** Return a hashcode of the service type */
     @Override
     public int hashCode() {
