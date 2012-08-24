@@ -41,7 +41,9 @@ public interface ServiceScope {
 
     /**
      * Add a listener which will receive lifecycle events for events which match
-     * the supplied query filter.
+     * the supplied query filter. Each {listener, query} pair is unique, meaning
+     * that a service listener can be registered for multiple queires within a
+     * scope.
      * 
      * <p>
      * The syntax of a filter string is the string representation of LDAP search
@@ -111,7 +113,6 @@ public interface ServiceScope {
      */
     void addServiceListener(ServiceListener listener, String query)
                                                                    throws InvalidSyntaxException;
-
 
     /**
      * Answer the first service that matches the supplied service type. A
@@ -227,12 +228,23 @@ public interface ServiceScope {
     UUID register(ServiceURL url, Map<String, String> properties);
 
     /**
-     * Remove a listener from the scope.
+     * Remove a listener from the scope. All queries the listener is registered
+     * for in this scope are removed.
      * 
      * @param listener
      *            - the listener to remove.
      */
     void removeServiceListener(ServiceListener listener);
+
+    /**
+     * Remove the {query, listener} pair from the scope
+     * 
+     * @param listener
+     *            - the listener to remove.
+     * @throws InvalidSyntaxException
+     */
+    void removeServiceListener(ServiceListener listener, String query)
+                                                                      throws InvalidSyntaxException;
 
     /**
      * Update the service properties for an existing service. If this scope is

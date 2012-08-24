@@ -115,7 +115,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 
-public class Filter {
+public class Filter implements Comparable<Filter> {
     /**
      * Parser class for OSGi filter strings. This class parses the complete
      * filter string and builds a tree of Filter objects rooted at the parent.
@@ -1712,5 +1712,13 @@ public class Filter {
         }
 
         return assertions;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(Filter o) {
+        return filter.compareTo(o.filter);
     }
 }

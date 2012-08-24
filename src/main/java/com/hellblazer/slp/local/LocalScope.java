@@ -18,8 +18,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.Executor;
 
 import org.slf4j.Logger;
@@ -49,10 +51,76 @@ import com.hellblazer.slp.ServiceURL;
  * 
  */
 public class LocalScope implements ServiceScope {
+    private static class ListenerRegistration implements Comparable<ListenerRegistration> {
+        final ServiceListener listener;
+        final Filter          query;
+
+        /**
+         * @param listener
+         * @param fileter
+         */
+        public ListenerRegistration(ServiceListener listener, Filter filter) {
+            this.listener = listener;
+            this.query = filter;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            ListenerRegistration other = (ListenerRegistration) obj;
+            if (listener == null) {
+                if (other.listener != null) {
+                    return false;
+                }
+            } else if (!listener.equals(other.listener)) {
+                return false;
+            }
+            if (query == null) {
+                if (other.query != null) {
+                    return false;
+                }
+            } else if (!query.equals(other.query)) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result
+                     + (listener == null ? 0 : listener.hashCode());
+            result = prime * result + (query == null ? 0 : query.hashCode());
+            return result;
+        }
+
+        /* (non-Javadoc)
+         * @see java.lang.Comparable#compareTo(java.lang.Object)
+         */
+        @Override
+        public int compareTo(ListenerRegistration reg) {
+            if (listener.equals(reg.listener)) {
+                return query.compareTo(reg.query);
+            } else {
+                return new Integer(listener.hashCode()).compareTo(new Integer(
+                                                                              listener.hashCode()));
+            }
+        }
+    }
+
     private final static Logger                   log       = LoggerFactory.getLogger(LocalScope.class);
 
     private final Executor                        executor;
-    private final Map<ServiceListener, Filter>    listeners = new ConcurrentHashMap<ServiceListener, Filter>();
+    private final Set<ListenerRegistration>       listeners = new ConcurrentSkipListSet<LocalScope.ListenerRegistration>();
     private final Map<UUID, ServiceReferenceImpl> services  = new ConcurrentHashMap<UUID, ServiceReferenceImpl>();
     private final NoArgGenerator                  uuidGenerator;
 
@@ -71,7 +139,7 @@ public class LocalScope implements ServiceScope {
             log.trace("adding listener: " + listener + " on query: " + query);
         }
         List<ServiceReference> references;
-        listeners.put(listener, new Filter(query));
+        listeners.add(new ListenerRegistration(listener, new Filter(query)));
         references = getServiceReferences(null, query);
         for (ServiceReference reference : references) {
             final ServiceReference ref = reference;
@@ -159,7 +227,22 @@ public class LocalScope implements ServiceScope {
      */
     @Override
     public void removeServiceListener(ServiceListener listener) {
-        listeners.remove(listener);
+        List<ListenerRegistration> registrations = new ArrayList<LocalScope.ListenerRegistration>();
+        for (ListenerRegistration reg : listeners) {
+            if (reg.listener == listener) {
+                registrations.add(reg);
+            }
+        }
+        listeners.removeAll(registrations);
+    }
+
+    /* (non-Javadoc)
+     * @see com.hellblazer.slp.ServiceScope#removeServiceListener(com.hellblazer.slp.ServiceListener, java.lang.String)
+     */
+    @Override
+    public void removeServiceListener(ServiceListener listener, String query)
+                                                                             throws InvalidSyntaxException {
+        listeners.remove(new ListenerRegistration(listener, new Filter(query)));
     }
 
     /* (non-Javadoc)
@@ -203,9 +286,9 @@ public class LocalScope implements ServiceScope {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                for (Map.Entry<ServiceListener, Filter> entry : listeners.entrySet()) {
-                    if (entry.getValue().match(reference)) {
-                        final ServiceListener listener = entry.getKey();
+                for (ListenerRegistration reg : listeners) {
+                    if (reg.query.match(reference)) {
+                        final ServiceListener listener = reg.listener;
                         executor.execute(new Runnable() {
                             @Override
                             public void run() {
