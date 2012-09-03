@@ -51,7 +51,8 @@ import com.hellblazer.slp.ServiceURL;
  * 
  */
 public class LocalScope implements ServiceScope {
-    private static class ListenerRegistration implements Comparable<ListenerRegistration> {
+    private static class ListenerRegistration implements
+            Comparable<ListenerRegistration> {
         final ServiceListener listener;
         final Filter          query;
 
@@ -61,7 +62,20 @@ public class LocalScope implements ServiceScope {
          */
         public ListenerRegistration(ServiceListener listener, Filter filter) {
             this.listener = listener;
-            this.query = filter;
+            query = filter;
+        }
+
+        /* (non-Javadoc)
+         * @see java.lang.Comparable#compareTo(java.lang.Object)
+         */
+        @Override
+        public int compareTo(ListenerRegistration reg) {
+            if (listener.equals(reg.listener)) {
+                return query.compareTo(reg.query);
+            } else {
+                return new Integer(listener.hashCode()).compareTo(new Integer(
+                                                                              listener.hashCode()));
+            }
         }
 
         @Override
@@ -101,19 +115,6 @@ public class LocalScope implements ServiceScope {
                      + (listener == null ? 0 : listener.hashCode());
             result = prime * result + (query == null ? 0 : query.hashCode());
             return result;
-        }
-
-        /* (non-Javadoc)
-         * @see java.lang.Comparable#compareTo(java.lang.Object)
-         */
-        @Override
-        public int compareTo(ListenerRegistration reg) {
-            if (listener.equals(reg.listener)) {
-                return query.compareTo(reg.query);
-            } else {
-                return new Integer(listener.hashCode()).compareTo(new Integer(
-                                                                              listener.hashCode()));
-            }
         }
     }
 
@@ -158,6 +159,15 @@ public class LocalScope implements ServiceScope {
             });
         }
 
+    }
+
+    /* (non-Javadoc)
+     * @see com.hellblazer.slp.ServiceScope#addServiceListener(com.hellblazer.slp.ServiceListener, java.lang.String, java.lang.String)
+     */
+    @Override
+    public void addServiceListener(ServiceListener listener, String query,
+                                   String zone) throws InvalidSyntaxException {
+        addServiceListener(listener, query);
     }
 
     /* (non-Javadoc)
