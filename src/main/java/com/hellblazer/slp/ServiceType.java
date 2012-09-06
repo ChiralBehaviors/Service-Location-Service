@@ -15,6 +15,7 @@
 package com.hellblazer.slp;
 
 import java.io.Serializable;
+import java.net.URL;
 import java.util.StringTokenizer;
 
 /**
@@ -44,6 +45,36 @@ public class ServiceType implements Serializable {
     private final String       namingAuthority;
     private final String       simpleType;
     private final String       typeName;
+
+    public ServiceType(String abstractTypeName, URL url) {
+        isServiceType = true;
+        isAbstract = true;
+        String temporaryTypeName = abstractTypeName;
+        // look for a naming authority
+        int type_na_separator = temporaryTypeName.indexOf(".");
+        if (type_na_separator != -1) {
+            String _na = temporaryTypeName.substring(type_na_separator + 1);
+            if (_na.indexOf(":") != -1) {
+                _na = _na.substring(0, _na.indexOf(":"));
+            }
+            namingAuthority = _na;
+        } else {
+            namingAuthority = IANA;
+        }
+
+        abstractType = !namingAuthority.equals(IANA) ? temporaryTypeName.substring(0,
+                                                                                   temporaryTypeName.indexOf("."))
+                                                    : temporaryTypeName;
+        int index = temporaryTypeName.indexOf(":");
+        String tempConcretType = index == -1 ? ""
+                                            : temporaryTypeName.substring(index + 1);
+        if (tempConcretType.length() != 0) {
+            tempConcretType += ":";
+        }
+        tempConcretType += url.getProtocol();
+        concreteType = tempConcretType;
+        simpleType = typeName = "";
+    }
 
     /**
      * Create a service type object from the type name. The name may take the
