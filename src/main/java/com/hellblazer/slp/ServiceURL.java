@@ -34,7 +34,7 @@ import java.net.URL;
 public class ServiceURL implements Serializable {
     public static final Protocol DEFAULT_TRANSPORT  = Protocol.TCP;
 
-    public static final long     LIFETIME_DEFAULT   = 100;
+    public static final long     LIFETIME_DEFAULT   = 10;
     public static final int      LIFETIME_NONE      = 0;
     public static final long     LIFETIME_PERMANENT = -1;
     public static final int      NO_PORT            = 0;
@@ -127,24 +127,29 @@ public class ServiceURL implements Serializable {
         // create servicetype
         serviceType = new ServiceType(url.substring(0, index));
 
+        String remaining = url.substring(index + 2);
+        if (remaining.startsWith("/")) {
+            remaining = remaining.substring(1);
+        }
+
         // find URL path.
-        int pathIndex = url.indexOf("/", index + 3);
-        if (pathIndex == -1 || pathIndex == url.length() - 1) {
+        int pathIndex = remaining.indexOf("/");
+        if (pathIndex == -1 || pathIndex == remaining.length() - 1) {
             urlPath = "";
         } else {
-            urlPath = url.substring(pathIndex);
+            urlPath = remaining.substring(pathIndex);
         }
 
         // parse host and port.
-        String host = url.substring(index);
+        String host = "";
 
         if (pathIndex != -1) {
-            host = host.substring(0, pathIndex - index);
+            host = remaining.substring(0, pathIndex);
         }
 
-        if (!host.equals("://")) {
+        if (!host.isEmpty()) {
             try {
-                uri = new URI("srv" + host);
+                uri = new URI(String.format("srv://%s", host));
             } catch (URISyntaxException ex) {
                 throw new IllegalArgumentException(String.format("Illegal URL",
                                                                  url), ex);

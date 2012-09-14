@@ -75,8 +75,8 @@ abstract public class ServiceReference implements Serializable,
 
     @Override
     public String toString() {
-        return "ServiceReference [url=" + url + ", properties=" + properties
-               + ", registration=" + registration + "]";
+        return "ServiceReference [url=" + url + ", registration="
+               + registration + "]";
     }
 
     @Override

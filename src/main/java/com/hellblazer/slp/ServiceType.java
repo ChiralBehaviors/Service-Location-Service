@@ -178,15 +178,15 @@ public class ServiceType implements Serializable {
         StringBuilder sb = new StringBuilder();
         if (isServiceType) {
             if (isAbstractType()) {
-                sb.append(getAbstractTypeName());
+                sb.append(getAbstractTypeName().replace(".", "\\."));
                 appendConcreteDnsTypeNames(sb);
             } else {
                 sb.append('_');
-                sb.append(getPrincipleTypeName());
+                sb.append(getPrincipleTypeName().replace(".", "\\."));
             }
         } else {
             sb.append('_');
-            sb.append(typeName);
+            sb.append(typeName.replace(".", "\\."));
         }
         return sb.toString();
     }
@@ -291,7 +291,7 @@ public class ServiceType implements Serializable {
         StringTokenizer tokens = new StringTokenizer(getConcreteTypeName(), ":");
         while (tokens.hasMoreTokens()) {
             sb.append("._");
-            sb.append(tokens.nextToken());
+            sb.append(tokens.nextToken().replace(".", "\\."));
         }
     }
 }

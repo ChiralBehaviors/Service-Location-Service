@@ -624,6 +624,7 @@ public class Filter implements Comparable<Filter> {
      */
     public Filter(String filter) throws InvalidSyntaxException {
         topLevel = true;
+        this.filter = filter;
         new Parser(filter).parse(this);
     }
 
@@ -1719,6 +1720,9 @@ public class Filter implements Comparable<Filter> {
      */
     @Override
     public int compareTo(Filter o) {
+        assert filter != null : String.format("Filter is null %s", this);
+        assert o != null;
+        assert o.filter != null;
         return filter.compareTo(o.filter);
     }
 }
