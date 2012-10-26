@@ -14,7 +14,6 @@
  */
 package com.hellblazer.slp;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
@@ -29,8 +28,7 @@ import java.util.UUID;
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  * 
  */
-abstract public class ServiceReference implements Serializable {
-    private static final long     serialVersionUID = 1L;
+abstract public class ServiceReference implements Comparable<ServiceReference> {
 
     protected Map<String, String> properties;
     protected final UUID          registration;
@@ -45,6 +43,14 @@ abstract public class ServiceReference implements Serializable {
         this.url = url;
         this.properties = properties;
         this.registration = registration;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(ServiceReference o) {
+        return url.compareTo(o.url);
     }
 
     @Override

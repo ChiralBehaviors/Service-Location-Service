@@ -31,7 +31,6 @@ import com.hellblazer.slp.ServiceURL;
  * 
  */
 class ServiceReferenceImpl extends ServiceReference {
-    private static final long serialVersionUID = 1L;
 
     public ServiceReferenceImpl(ServiceURL url, Map<String, String> properties,
                                 UUID registration) {
