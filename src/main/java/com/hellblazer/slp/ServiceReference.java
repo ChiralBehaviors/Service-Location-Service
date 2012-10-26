@@ -29,8 +29,7 @@ import java.util.UUID;
  * @author <a href="mailto:hal.hildebrand@gmail.com">Hal Hildebrand</a>
  * 
  */
-abstract public class ServiceReference implements Serializable,
-        Comparable<ServiceReference> {
+abstract public class ServiceReference implements Serializable {
     private static final long     serialVersionUID = 1L;
 
     protected Map<String, String> properties;
@@ -77,23 +76,5 @@ abstract public class ServiceReference implements Serializable,
     public String toString() {
         return "ServiceReference [url=" + url + ", registration="
                + registration + "]";
-    }
-
-    @Override
-    public int compareTo(ServiceReference ref) {
-        if (!url.equals(ref.url)) {
-            return url.toString().compareTo(ref.url.toString());
-        }
-        if (url.getPriority() < ref.url.getPriority()) {
-            return -1;
-        } else if (url.getPriority() > ref.url.getPriority()) {
-            return 1;
-        }
-        if (url.getWeight() < ref.url.getWeight()) {
-            return -1;
-        } else if (url.getWeight() > ref.url.getWeight()) {
-            return 1;
-        }
-        return 0;
     }
 }
