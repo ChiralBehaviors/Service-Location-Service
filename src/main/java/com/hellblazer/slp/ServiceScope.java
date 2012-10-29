@@ -114,9 +114,6 @@ public interface ServiceScope {
     void addServiceListener(ServiceListener listener, String query)
                                                                    throws InvalidSyntaxException;
 
-    void addServiceListener(ServiceListener listener, String query, String zone)
-                                                                                throws InvalidSyntaxException;
-
     /**
      * Answer the first service that matches the supplied service type. A
      * service type is one of three different types:
