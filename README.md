@@ -12,3 +12,22 @@ To build this project, you will need Java 1.7 (although the binaries are targete
     mvn clean install
 
 Note that you still need implmentations of this API ;)  This project only provides the API and framework, not the underlying implementation.
+
+See the [project wiki](https://github.com/Hellblazer/Service-Location-Service/wiki) for design and usage.
+    
+### Maven configuration
+
+include the hellblazer snapshot repository:
+
+    <repository>
+        <id>hellblazer-snapshots</id>
+        <url>https://repository-hal900000.forge.cloudbees.com/snapshot/</url>
+    </repository>
+    
+add as dependency:
+
+    <dependency>
+        <groupId>com.hellblazer</groupId>
+        <artifactId>service-discovery</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
