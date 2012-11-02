@@ -189,8 +189,14 @@ public class LocalScope implements ServiceScope {
         if (serviceType == null) {
             serviceType = "*";
         }
-        Filter filter = new Filter("(&(" + SERVICE_TYPE + "=" + serviceType
-                                   + ") " + query + ")");
+        Filter filter;
+        if (query == null) {
+            filter = new Filter(String.format("(%s=%s)", SERVICE_TYPE,
+                                              serviceType));
+        } else {
+            filter = new Filter(String.format("(&(%s=%s) %s)", SERVICE_TYPE,
+                                              serviceType, query));
+        }
         ArrayList<ServiceReference> references = new ArrayList<ServiceReference>();
         for (Map.Entry<UUID, ServiceReferenceImpl> entry : services.entrySet()) {
             if (filter.match(entry.getValue())) {
