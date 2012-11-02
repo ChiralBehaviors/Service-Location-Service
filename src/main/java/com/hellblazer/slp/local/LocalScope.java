@@ -298,7 +298,7 @@ public class LocalScope implements ServiceScope {
                                                                              type,
                                                                              reference));
                                 } catch (Throwable e) {
-                                    log.error(String.format("Error when notifying listener % on reference % type %s",
+                                    log.error(String.format("Error when notifying listener %s on reference %s type %s",
                                                             listener,
                                                             reference, type), e);
                                 }
