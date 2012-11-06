@@ -62,11 +62,23 @@ public class ServiceURL implements Comparable<ServiceURL> {
         this.weight = weight;
     }
 
-    public ServiceURL(String url) {
+    public ServiceURL(String url) throws MalformedURLException {
         this(url, (byte) 0, (byte) 0);
     }
 
-    public ServiceURL(String url, byte weight, byte priority) {
+    public ServiceURL(String url, byte weight, byte priority)
+                                                             throws MalformedURLException {
+        /* Check that there are no non-ASCII characters in the URL,
+        following RFC 2609.  */
+        for (int i = 0; i < url.length(); i++) {
+            char c = url.charAt(i);
+            if (c < 32 || c >= 127) {
+                throw new MalformedURLException("Service URL contains "
+                                                + "non-ASCII character 0x"
+                                                + Integer.toHexString(c));
+            }
+        }
+
         int index = url.indexOf(":/");
         if (index == -1) {
             throw new IllegalArgumentException(
@@ -126,10 +138,6 @@ public class ServiceURL implements Comparable<ServiceURL> {
         }
 
         return result;
-    }
-
-    public String getDnsServiceType() {
-        return serviceType.getDnsServiceType();
     }
 
     public String getHost() {

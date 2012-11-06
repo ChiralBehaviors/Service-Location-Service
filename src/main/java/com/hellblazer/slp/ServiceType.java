@@ -15,7 +15,8 @@
 package com.hellblazer.slp;
 
 import java.io.Serializable;
-import java.net.URL;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.StringTokenizer;
 
 /**
@@ -40,41 +41,7 @@ public class ServiceType implements Serializable {
 
     private final String       abstractType;
     private final String       concreteType;
-    private final boolean      isAbstract;
-    private final boolean      isServiceType;
-    private final String       namingAuthority;
-    private final String       simpleType;
-    private final String       typeName;
-
-    public ServiceType(String abstractTypeName, URL url) {
-        isServiceType = true;
-        isAbstract = true;
-        String temporaryTypeName = abstractTypeName;
-        // look for a naming authority
-        int type_na_separator = temporaryTypeName.indexOf(".");
-        if (type_na_separator != -1) {
-            String _na = temporaryTypeName.substring(type_na_separator + 1);
-            if (_na.indexOf(":") != -1) {
-                _na = _na.substring(0, _na.indexOf(":"));
-            }
-            namingAuthority = _na;
-        } else {
-            namingAuthority = IANA;
-        }
-
-        abstractType = !namingAuthority.equals(IANA) ? temporaryTypeName.substring(0,
-                                                                                   temporaryTypeName.indexOf("."))
-                                                    : temporaryTypeName;
-        int index = temporaryTypeName.indexOf(":");
-        String tempConcretType = index == -1 ? ""
-                                            : temporaryTypeName.substring(index + 1);
-        if (tempConcretType.length() != 0) {
-            tempConcretType += ":";
-        }
-        tempConcretType += url.getProtocol();
-        concreteType = tempConcretType;
-        simpleType = typeName = "";
-    }
+    private final boolean      isService;
 
     /**
      * Create a service type object from the type name. The name may take the
@@ -86,62 +53,73 @@ public class ServiceType implements Serializable {
      *             if the name is syntactically incorrect.
      */
     public ServiceType(String typeName) {
-        this.typeName = typeName;
-        String temporaryTypeName = "";
-        if (typeName.indexOf(SERVICE_PREFIX) != -1) {
-            isServiceType = true;
-            temporaryTypeName = typeName.substring(SERVICE_PREFIX.length());
-        } else {
-            isServiceType = false;
-            isAbstract = false;
-            abstractType = concreteType = simpleType = namingAuthority = "";
-            return;
+        StringTokenizer tokens = new StringTokenizer(typeName, ":");
+        if (!tokens.hasMoreElements()) {
+            throw new IllegalArgumentException("");
         }
-        // simple or abstract ?
-        isAbstract = temporaryTypeName.indexOf(":") != -1;
-        // look for a naming authority
-        int type_na_separator = temporaryTypeName.indexOf(".");
-        if (type_na_separator != -1) {
-            String _na = temporaryTypeName.substring(type_na_separator + 1);
-            if (_na.indexOf(":") != -1) {
-                _na = _na.substring(0, _na.indexOf(":"));
+        Deque<String> elements = new ArrayDeque<String>();
+        while (tokens.hasMoreElements()) {
+            elements.add(tokens.nextToken());
+        }
+        if (SERVICE.equals(elements.getFirst())) {
+            isService = true;
+            elements.remove();
+            if (elements.size() > 1) {
+                abstractType = elements.remove();
+            } else if (elements.size() == 0) {
+                throw new IllegalArgumentException(
+                                                   String.format("Invalid service url: %s",
+                                                                 typeName));
+            } else {
+                abstractType = null;
             }
-            namingAuthority = _na;
         } else {
-            namingAuthority = IANA;
+            isService = false;
+            abstractType = null;
         }
-
-        // remove naming authority from type name;
-        String undefinedType = temporaryTypeName;
-        if (!namingAuthority.equals(IANA)) {
-            undefinedType = temporaryTypeName.substring(0,
-                                                        temporaryTypeName.indexOf("."));
+        StringBuilder builder = new StringBuilder();
+        while (!elements.isEmpty()) {
+            builder.append(elements.removeFirst());
+            if (!elements.isEmpty()) {
+                builder.append(":");
+            }
         }
-        // parse abstract and concrete names
-        if (isAbstractType()) {
-            abstractType = !namingAuthority.equals(IANA) ? temporaryTypeName.substring(0,
-                                                                                       temporaryTypeName.indexOf("."))
-                                                        : temporaryTypeName.substring(0,
-                                                                                      temporaryTypeName.indexOf(":"));
-            concreteType = temporaryTypeName.substring(temporaryTypeName.indexOf(":") + 1);
-            simpleType = "";
-        } else {
-            abstractType = "";
-            concreteType = "";
-            simpleType = undefinedType;
-        }
+        concreteType = builder.toString();
     }
 
-    /**
-     * Return true if the parameter is a ServiceType object and the type names
-     * match.
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object o) {
-        if (o instanceof ServiceType) {
-            return typeName.equals(((ServiceType) o).typeName);
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
-        return false;
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ServiceType other = (ServiceType) obj;
+        if (abstractType == null) {
+            if (other.abstractType != null) {
+                return false;
+            }
+        } else if (!abstractType.equals(other.abstractType)) {
+            return false;
+        }
+        if (concreteType == null) {
+            if (other.concreteType != null) {
+                return false;
+            }
+        } else if (!concreteType.equals(other.concreteType)) {
+            return false;
+        }
+        if (isService != other.isService) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -151,12 +129,7 @@ public class ServiceType implements Serializable {
      * @return a String representing the abstract type name.
      */
     public String getAbstractTypeName() {
-        if (isAbstractType()) {
-            return
-            //      ServiceType.SERVICE_PREFIX+
-            abstractType;
-        }
-        return "";
+        return abstractType != null ? abstractType : "";
     }
 
     /**
@@ -165,65 +138,29 @@ public class ServiceType implements Serializable {
      * @return a String representing the concrete type name.
      */
     public String getConcreteTypeName() {
-        if (isAbstractType()) {
-            return concreteType;
-        }
-        return "";
-    }
-
-    /**
-     * @return
-     */
-    public String getDnsServiceType() {
-        StringBuilder sb = new StringBuilder();
-        if (isServiceType) {
-            if (isAbstractType()) {
-                sb.append(getAbstractTypeName().replace(".", "\\."));
-                appendConcreteDnsTypeNames(sb);
-            } else {
-                sb.append('_');
-                sb.append(getPrincipleTypeName().replace(".", "\\."));
-            }
-        } else {
-            sb.append('_');
-            sb.append(typeName.replace(".", "\\."));
-        }
-        return sb.toString();
-    }
-
-    /**
-     * The naming authority name. IANA default is the empty String.
-     * 
-     * @return a String representing the naming authority
-     */
-    public String getNamingAuthority() {
-        return namingAuthority;
-    }
-
-    /**
-     * The principle type name, which is either the abstract type name or the
-     * protocol name, without naming authority.
-     * 
-     * @return a String representing the principle type name .
-     */
-    public String getPrincipleTypeName() {
-        if (isAbstractType()) {
-            return abstractType;
-        }
-        return simpleType;
+        return concreteType;
     }
 
     /**
      * @return
      */
     public String getProtocol() {
-        return isServiceType ? getPrincipleTypeName() : typeName;
+        return concreteType;
     }
 
-    /** Return a hashcode of the service type */
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
-        return toString().hashCode();
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                 + (abstractType == null ? 0 : abstractType.hashCode());
+        result = prime * result
+                 + (concreteType == null ? 0 : concreteType.hashCode());
+        result = prime * result + (isService ? 1231 : 1237);
+        return result;
     }
 
     /**
@@ -232,17 +169,7 @@ public class ServiceType implements Serializable {
      * @return a flag indicating whether the service type is abstract or not.
      */
     public boolean isAbstractType() {
-        return isAbstract;
-    }
-
-    /**
-     * Return true if naming authority is default.
-     * 
-     * @return a flag indicating whether the naming authority of this service
-     *         type is the IANA default or not.
-     */
-    public boolean isNADefault() {
-        return namingAuthority.equals(IANA);
+        return abstractType != null;
     }
 
     /**
@@ -252,7 +179,7 @@ public class ServiceType implements Serializable {
      *         constructed with was a Service URL or not.
      */
     public boolean isServiceURL() {
-        return isServiceType;
+        return isService;
     }
 
     /**
@@ -264,34 +191,18 @@ public class ServiceType implements Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (isServiceType) {
+        if (isService) {
             sb.append(SERVICE_PREFIX);
-            String naPrefix = getNamingAuthority().equals(IANA) ? "" : ".";
             if (isAbstractType()) {
                 sb.append(getAbstractTypeName());
-                sb.append(naPrefix);
-                sb.append(getNamingAuthority());
                 sb.append(':');
                 sb.append(getConcreteTypeName());
             } else {
-                sb.append(getPrincipleTypeName());
-                sb.append(naPrefix);
-                sb.append(getNamingAuthority());
+                sb.append(getConcreteTypeName());
             }
         } else {
-            sb.append(typeName);
+            sb.append(concreteType);
         }
         return sb.toString();
-    }
-
-    /**
-     * @param sb
-     */
-    private void appendConcreteDnsTypeNames(StringBuilder sb) {
-        StringTokenizer tokens = new StringTokenizer(getConcreteTypeName(), ":");
-        while (tokens.hasMoreTokens()) {
-            sb.append("._");
-            sb.append(tokens.nextToken().replace(".", "\\."));
-        }
     }
 }

@@ -17,6 +17,7 @@ package com.hellblazer.slp;
 import static junit.framework.Assert.assertEquals;
 
 import java.net.URI;
+import java.net.URL;
 
 import org.junit.Test;
 
@@ -34,5 +35,17 @@ public class ServiceURLTest {
                      url.getServiceType().toString());
         assertEquals(new URI("srv://foo.com"), url.getUri());
         assertEquals("/my.jar!/", url.getUrlPath());
+    }
+
+    @Test
+    public void testServiceUrlParsing2() throws Exception {
+        ServiceURL url = new ServiceURL(
+                                        "service:configuration:http://192.168.56.1:56989/configuration");
+        assertEquals("service:configuration:http",
+                     url.getServiceType().toString());
+        assertEquals(new URI("srv://192.168.56.1:56989"), url.getUri());
+        assertEquals("/configuration", url.getUrlPath());
+        assertEquals(new URL("http://192.168.56.1:56989/configuration"),
+                     url.getUrl());
     }
 }

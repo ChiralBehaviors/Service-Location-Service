@@ -25,13 +25,6 @@ import org.junit.Test;
 public class ServiceTypeTest {
 
     @Test
-    public void testDnsServiceType() throws Exception {
-        String url = "service:myService:http";
-        ServiceType type = new ServiceType(url);
-        assertEquals("myService._http", type.getDnsServiceType());
-    }
-
-    @Test
     public void testParseServiceType() throws Exception {
         String url = "service:http";
         ServiceType type = new ServiceType(url);
