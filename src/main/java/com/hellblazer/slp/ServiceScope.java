@@ -35,9 +35,9 @@ import java.util.UUID;
  * 
  */
 public interface ServiceScope {
-    public static final String SERVICE_REGISTRAION = "sd.service.registration";
-    public static final String SERVICE_TYPE        = "sd.service.type";
-    public static final String SERVICE_URL_PATH    = "sd.service.url.path";
+    public static final String SERVICE_REGISTRATION = "sd.service.registration";
+    public static final String SERVICE_TYPE         = "sd.service.type";
+    public static final String SERVICE_URL_PATH     = "sd.service.url.path";
 
     /**
      * Add a listener which will receive lifecycle events for events which match
