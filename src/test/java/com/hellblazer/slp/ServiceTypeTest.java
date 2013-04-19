@@ -34,5 +34,10 @@ public class ServiceTypeTest {
         type = new ServiceType(url);
         assertEquals("myService", type.getAbstractTypeName());
         assertEquals("jar:http", type.getConcreteTypeName());
+
+        url = "jar:http";
+        type = new ServiceType(url);
+        assertEquals("", type.getAbstractTypeName());
+        assertEquals("jar:http", type.getConcreteTypeName());
     }
 }

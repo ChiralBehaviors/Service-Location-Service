@@ -48,4 +48,16 @@ public class ServiceURLTest {
         assertEquals(new URL("http://192.168.56.1:56989/configuration"),
                      url.getUrl());
     }
+
+    @Test
+    public void testNoUrlPath() throws Exception {
+        ServiceURL url = new ServiceURL(
+                                        "service:configuration:http://192.168.56.1:56989");
+        assertEquals("service:configuration:http",
+                     url.getServiceType().toString());
+        assertEquals(new URI("srv://192.168.56.1:56989"), url.getUri());
+        assertEquals("/", url.getUrlPath());
+        assertEquals(new URL("http://192.168.56.1:56989/"),
+                     url.getUrl());
+    }
 }
