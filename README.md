@@ -29,5 +29,5 @@ add as dependency:
     <dependency>
         <groupId>com.hellblazer</groupId>
         <artifactId>service-discovery</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.1-SNAPSHOT</version>
     </dependency>
