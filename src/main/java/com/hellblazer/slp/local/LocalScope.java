@@ -272,6 +272,16 @@ public class LocalScope implements ServiceScope {
         serviceChanged(ref, EventType.MODIFIED);
     }
 
+    @Override
+    public ServiceScope start() {
+	return this;
+    }
+
+    @Override
+    public ServiceScope stop() {
+	return this;
+    }
+
     /* (non-Javadoc)
      * @see com.hellblazer.slp.ServiceScope#unregister(java.util.UUID)
      */

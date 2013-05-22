@@ -256,6 +256,20 @@ public interface ServiceScope {
      *            - the map of properties for the service
      */
     void setProperties(UUID serviceRegistration, Map<String, String> properties);
+    
+    /**
+     * Start the service scope instance.
+     * 
+     * @return the scope instance.
+     */
+    ServiceScope start();
+    
+    /**
+     * Stop the service scope instance.
+     * 
+     * @return the scope instance
+     */
+    ServiceScope stop();
 
     /**
      * Unregister the service from the scope. If this scope is not responsible
