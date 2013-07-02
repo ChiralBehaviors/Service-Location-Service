@@ -115,6 +115,14 @@ public interface ServiceScope {
                                                                    throws InvalidSyntaxException;
 
     /**
+     * Answer the ServiceReference registered under the service registration id
+     * 
+     * @param serviceRegistration
+     * @return
+     */
+    ServiceReference getReference(UUID serviceRegistration);
+
+    /**
      * Answer the first service that matches the supplied service type. A
      * service type is one of three different types:
      * 
@@ -256,14 +264,14 @@ public interface ServiceScope {
      *            - the map of properties for the service
      */
     void setProperties(UUID serviceRegistration, Map<String, String> properties);
-    
+
     /**
      * Start the service scope instance.
      * 
      * @return the scope instance.
      */
     ServiceScope start();
-    
+
     /**
      * Stop the service scope instance.
      * 

@@ -162,6 +162,14 @@ public class LocalScope implements ServiceScope {
     }
 
     /* (non-Javadoc)
+     * @see com.hellblazer.slp.ServiceScope#getReference(java.util.UUID)
+     */
+    @Override
+    public ServiceReference getReference(UUID serviceRegistration) {
+        return services.get(serviceRegistration);
+    }
+
+    /* (non-Javadoc)
      * @see com.hellblazer.slp.ServiceScope#getServiceReference(java.lang.String)
      */
     @Override
@@ -274,12 +282,12 @@ public class LocalScope implements ServiceScope {
 
     @Override
     public ServiceScope start() {
-	return this;
+        return this;
     }
 
     @Override
     public ServiceScope stop() {
-	return this;
+        return this;
     }
 
     /* (non-Javadoc)
