@@ -14,16 +14,26 @@
  * limitations under the License.
  */
 
-package com.hellblazer.slp.config;
+package com.hellblazer.slp.local.config;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.hellblazer.slp.ServiceScope;
+import com.hellblazer.slp.config.ServiceScopeConfiguration;
+import com.hellblazer.slp.local.LocalScope;
 
 /**
  * @author hhildebrand
  * 
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-public interface ServiceScopeConfiguration {
-    ServiceScope construct() throws Exception;
+public class LocalScopeConfiguration implements ServiceScopeConfiguration {
+
+    private int notificationThreads = 2;
+
+    /* (non-Javadoc)
+     * @see com.hellblazer.slp.config.ServiceScopeConfiguration#construct()
+     */
+    @Override
+    public ServiceScope construct() throws Exception {
+        return new LocalScope(notificationThreads);
+    }
+
 }

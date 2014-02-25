@@ -23,10 +23,12 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.NoArgGenerator;
 import com.hellblazer.slp.Filter;
 import com.hellblazer.slp.InvalidSyntaxException;
@@ -128,6 +130,11 @@ public class LocalScope implements ServiceScope {
     public LocalScope(Executor execService, NoArgGenerator generator) {
         uuidGenerator = generator;
         executor = execService;
+    }
+
+    public LocalScope(int notificationThreads) {
+        this(Executors.newFixedThreadPool(notificationThreads),
+             Generators.timeBasedGenerator());
     }
 
     /* (non-Javadoc)
