@@ -16,8 +16,6 @@
 
 package com.hellblazer.slp.local.config;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.hellblazer.slp.config.ServiceScopeConfiguration;
 
@@ -25,13 +23,12 @@ import com.hellblazer.slp.config.ServiceScopeConfiguration;
  * @author hhildebrand
  * 
  */
-@JsonSubTypes({ @Type(value = LocalScopeModule.class, name = "localScope") })
 public class LocalScopeModule extends SimpleModule {
 
     private static final long serialVersionUID = 1L;
 
     public LocalScopeModule() {
-        super("Gossip Scope Module");
+        super("LocalScope Scope Module");
     }
 
     public LocalScopeModule(String name) {
@@ -42,7 +39,7 @@ public class LocalScopeModule extends SimpleModule {
     public void setupModule(SetupContext context) {
 
         context.setMixInAnnotations(ServiceScopeConfiguration.class,
-                                    LocalScopeConfiguration.class);
+                                    Mixin.class);
         super.setupModule(context);
     }
 }

@@ -16,14 +16,12 @@
 
 package com.hellblazer.slp.config;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.hellblazer.slp.ServiceScope;
 
 /**
  * @author hhildebrand
  * 
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 public interface ServiceScopeConfiguration {
     ServiceScope construct() throws Exception;
 }
